@@ -1,0 +1,140 @@
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+
+function DriverDashboard() {
+
+    const navigate = useNavigate()
+    const [driver, setDriver] = useState(null)
+    const [students, setStudents] = useState([])
+    const [attendance, setAttendance] = useState([])
+    const [tripStarted, setTripStarted] = useState(false)
+
+    useEffect(() => {
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+        const allUsers = JSON.parse(localStorage.getItem("users")) || []
+        const allAttendance = JSON.parse(localStorage.getItem("attendance")) || []
+
+        if (!currentUser || currentUser.role !== "driver") {
+            navigate("/")
+            return
+        }
+
+        setDriver(currentUser)
+        setAttendance(allAttendance)
+
+        // Only students of same bus number
+        const busStudents = allUsers.filter(
+            (user) =>
+                user.role === "student" &&
+                user.busNumber === currentUser.busNumber
+        )
+
+        setStudents(busStudents)
+
+    }, [navigate])
+
+    const logout = () => {
+        localStorage.removeItem("currentUser")
+        navigate("/")
+    }
+
+    const getAttendanceStatus = (studentEmail) => {
+        const record = attendance.find(
+            (a) => a.studentEmail === studentEmail
+        )
+
+        return record?.status === "present"
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-400 p-4">
+
+            {/* Header */}
+            <div className="bg-yellow-400 rounded-2xl p-4 shadow-xl mb-6 flex justify-between items-center">
+
+                <div>
+                    <h1 className="text-xl font-bold">
+                        Bus {driver?.busNumber} Driver
+                    </h1>
+                    <p className="text-sm">
+                        Good Morning, {driver?.fullName}
+                    </p>
+                </div>
+
+                <button
+                    onClick={logout}
+                    className="bg-black text-white px-4 py-2 rounded-lg"
+                >
+                    Logout
+                </button>
+            </div>
+
+            {/* Emergency Button */}
+            <div className="bg-white rounded-2xl p-4 shadow-lg mb-6">
+                <button className="w-full bg-yellow-400 py-3 rounded-xl font-semibold hover:scale-105 transition">
+                    🚨 Emergency Call
+                </button>
+            </div>
+
+            {/* Students List */}
+            <div className="space-y-4">
+
+                {students.map((student) => {
+
+                    const checkedIn = getAttendanceStatus(student.studentEmail)
+
+                    return (
+                        <div
+                            key={student.studentEmail}
+                            className="bg-white rounded-2xl p-4 shadow-lg flex justify-between items-center hover:scale-[1.02] transition"
+                        >
+                            <div>
+                                <h2 className="font-bold">
+                                    {student.fullName}
+                                </h2>
+                                <p className="text-sm text-gray-600">
+                                    Stop: {student.stop || "N/A"}
+                                </p>
+                            </div>
+
+                            <div>
+                                {checkedIn ? (
+                                    <span className="bg-green-500 text-white px-4 py-2 rounded-full text-sm">
+                                        ✅ Checked In
+                                    </span>
+                                ) : (
+                                    <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm">
+                                        ❌ Not Checked
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    )
+                })}
+
+                {students.length === 0 && (
+                    <p className="text-white text-center mt-10">
+                        No students assigned to this bus.
+                    </p>
+                )}
+            </div>
+
+            {/* Start Trip Button */}
+            <div className="fixed bottom-0 left-0 right-0 bg-yellow-400 p-4 rounded-t-3xl shadow-xl">
+                <button
+                    onClick={() => setTripStarted(!tripStarted)}
+                    className={`w-full py-3 rounded-xl font-bold text-white transition ${
+                        tripStarted
+                            ? "bg-red-500"
+                            : "bg-green-500"
+                    }`}
+                >
+                    {tripStarted ? "END TRIP" : "START TRIP"}
+                </button>
+            </div>
+
+        </div>
+    )
+}
+
+export default DriverDashboard

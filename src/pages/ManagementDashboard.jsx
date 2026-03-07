@@ -13,7 +13,6 @@ function ManagementDashboard() {
         window.innerWidth > window.innerHeight
     )
 
-    // detect the orientation
     useEffect(() => {
         const handleResize = () => {
             setIsLandscape(window.innerWidth > window.innerHeight)
@@ -23,9 +22,8 @@ function ManagementDashboard() {
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
-    // data loading
     useEffect(() => {
-        const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+        const currentUser = JSON.parse(localStorage.getItem("user"))
         const users = JSON.parse(localStorage.getItem("users")) || []
         const attendanceData = JSON.parse(localStorage.getItem("attendance")) || []
 
@@ -42,29 +40,33 @@ function ManagementDashboard() {
     }, [navigate])
 
     const logout = () => {
-        localStorage.removeItem("currentUser")
+        localStorage.removeItem("user")
+        localStorage.removeItem("isLoggedIn")
         navigate("/")
     }
 
     const getCheckedCount = (busNumber) => {
-        const busStudents = students.filter(s => s.busNumber === busNumber)
+        const busStudents = students.filter(s => String(s.busId) === String(busNumber))
         const checked = attendance.filter(a =>
-            a.busNumber === busNumber && a.status === "present"
+            String(a.busId) === String(busNumber) && a.status === "present"
         )
 
         return `${checked.length}/${busStudents.length}`
     }
 
     const getBusStatus = (busNumber) => {
+
         const checked = attendance.filter(a =>
-            a.busNumber === busNumber && a.status === "present"
+            String(a.busId) === String(busNumber) &&
+            a.status === "present"
         )
 
-        if (checked.length === 0) return "DELAY"
+        if (checked.length === 0) return "NOT STARTED"
+        if (checked.length < 3) return "DELAY"
+
         return "ON TIME"
     }
 
-    //  mobile ke liye show rotate please
     if (!isLandscape) {
         return (
             <div className="h-screen flex items-center justify-center bg-black text-white text-center p-6">
@@ -83,7 +85,6 @@ function ManagementDashboard() {
     return (
         <div className="min-h-screen bg-gray-900 text-white flex">
 
-            {/* Sidebar */}
             <div className="w-72 bg-black p-5 space-y-6">
 
                 <div>
@@ -126,7 +127,6 @@ function ManagementDashboard() {
 
             </div>
 
-            {/* Main section */}
             <div className="flex-1 p-6">
 
                 <div className="flex justify-between items-center mb-6">
@@ -140,14 +140,12 @@ function ManagementDashboard() {
                     </div>
                 </div>
 
-                {/* Map Section */}
                 <div className="bg-gray-800 rounded-2xl h-64 mb-6 flex items-center justify-center">
                     <p className="text-gray-400">
                         Live Map Integration Coming Soon
                     </p>
                 </div>
 
-                {/* Bus ki info */}
                 <div className="bg-gray-800 rounded-2xl overflow-hidden">
 
                     <div className="grid grid-cols-5 bg-black p-3 font-semibold text-sm">
@@ -158,7 +156,7 @@ function ManagementDashboard() {
                         <div>Status</div>
                     </div>
 
-                    {drivers && drivers.length > 0 && drivers.map((driver, index) => {
+                    {drivers?.map((driver, index) => {
 
                         const studentCount = getCheckedCount(driver.busNumber)
                         const status = getBusStatus(driver.busNumber)

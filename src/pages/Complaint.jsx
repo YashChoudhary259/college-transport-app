@@ -54,7 +54,7 @@ function Complaint() {
 
             </div>
 
-            {/* Complaint Box (Only Text Area) */}
+            {/* Complaint Box */}
             <div className="mb-6">
                 
                 <textarea

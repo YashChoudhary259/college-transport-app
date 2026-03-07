@@ -7,6 +7,7 @@ import NewPassword from "./pages/NewPassword"
 import Signup from "./pages/Signup"
 import DriverDashboard from "./pages/DriverDashboard"
 import ManagementDashboard from "./pages/ManagementDashboard"
+import Contact from "./pages/Contact"
 
 import Home from "./pages/Home"
 import MorningRoute from "./pages/MorningRoute"
@@ -17,7 +18,6 @@ import SOS from "./pages/SOS"
 import BusFeeStatus from "./pages/BusFeeStatus"
 import Complaint from "./pages/Complaint"
 import Suggestions from "./pages/Suggestions"
-import StudentProfile from "./pages/StudentProfile"
 import Account from "./pages/Account"
 import LiveTracking from "./pages/LiveTracking"
 
@@ -32,6 +32,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/driver-dashboard" element={<DriverDashboard />} />
       <Route path="/management-dashboard" element={<ManagementDashboard />} />
+      <Route path="/contact" element={<Contact />} />
       
 
       {/* All App Screens (WITH Layout) */}
@@ -45,7 +46,6 @@ function App() {
         <Route path="/fee-status" element={<BusFeeStatus />} />
         <Route path="/complaint" element={<Complaint />} />
         <Route path="/suggestions" element={<Suggestions />} />
-        <Route path="/profile" element={<StudentProfile />} />
         <Route path="/account" element={<Account />} />
         <Route path="/live-tracking" element={<LiveTracking />} />
       </Route>

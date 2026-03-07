@@ -19,7 +19,7 @@ function StudentLogin() {
             if (role === "student") {
                 return (
                     user.role === "student" &&
-                    user.studentEmail === id &&   // ✅ fixed
+                    user.email === id &&
                     user.password === password
                 )
             }
@@ -27,7 +27,8 @@ function StudentLogin() {
             if (role === "driver") {
                 return (
                     user.role === "driver" &&
-                    user.driverId === id &&      // ✅ fixed
+                    user.driverId === id &&
+                    user.busNumber === busNumber &&
                     user.password === password
                 )
             }
@@ -35,7 +36,7 @@ function StudentLogin() {
             if (role === "management") {
                 return (
                     user.role === "management" &&
-                    user.managementId === id &&  // ✅ fixed
+                    user.managementId === id &&
                     user.password === password
                 )
             }
@@ -48,7 +49,8 @@ function StudentLogin() {
             return
         }
 
-        localStorage.setItem("currentUser", JSON.stringify(foundUser))
+        localStorage.setItem("user", JSON.stringify(foundUser))
+        localStorage.setItem("isLoggedIn", "true")
 
         if (foundUser.role === "driver") {
             navigate("/driver-dashboard")
@@ -85,10 +87,10 @@ function StudentLogin() {
                         type="text"
                         placeholder={
                             role === "student"
-                                ? "Student ID or Email"
+                                ? "Student Email"
                                 : role === "driver"
-                                    ? "Driver ID"
-                                    : "Management ID"
+                                ? "Driver ID"
+                                : "Management ID"
                         }
                         value={id}
                         onChange={(e) => setId(e.target.value)}
@@ -163,4 +165,4 @@ function StudentLogin() {
     )
 }
 
-export default StudentLogin   // ✅ fixed
+export default StudentLogin

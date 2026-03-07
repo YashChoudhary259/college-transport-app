@@ -13,10 +13,10 @@ function Home() {
     })
 
     useEffect(() => {
-        const isLoggedIn = localStorage.getItem("isLoggedIn")
+
         const storedUser = JSON.parse(localStorage.getItem("user"))
 
-        if (!isLoggedIn || !storedUser) {
+        if (!storedUser) {
             navigate("/")
         } else {
             setUser(storedUser)
@@ -27,13 +27,13 @@ function Home() {
             setTrackingData(storedTracking)
         }
 
-    }, [])
+    }, [navigate])
+
 
     if (!user) return null
 
     const firstName = user.fullName?.split(" ")[0] || "Student"
 
-    // ✅ Dynamic Greeting
     const hour = new Date().getHours()
     let greeting = "Good Morning"
     if (hour >= 12 && hour < 17) greeting = "Good Afternoon"
@@ -42,10 +42,8 @@ function Home() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-yellow-400 to-black relative">
 
-            {/* TOP SECTION */}
             <div className="px-6 pt-2 pb-8 relative">
 
-                {/* Top Row */}
                 <div className="flex justify-between items-center mb-6">
 
                     <div className="flex items-center gap-3">
@@ -57,7 +55,7 @@ function Home() {
                         />
                         <div>
                             <p className="font-semibold text-sm text-black">
-                                Bus ID: {user.id}
+                                Bus ID: {user.busId || "Not Assigned"}
                             </p>
                             <p className="text-sm text-black/80">
                                 {user.branchSem}
@@ -65,7 +63,6 @@ function Home() {
                         </div>
                     </div>
 
-                    {/* 🔔 Bell with Notification Badge */}
                     <div className="relative mr-6 cursor-pointer">
                         <Bell size={42} />
                         <span className="absolute top-1 right-1 w-3 h-3 bg-red-600 rounded-full border-2 border-white"></span>
@@ -73,7 +70,6 @@ function Home() {
 
                 </div>
 
-                {/* Greeting */}
                 <h1 className="text-3xl font-extrabold mb-2 tracking-wide">
                     {greeting}, {firstName}
                 </h1>
@@ -82,10 +78,8 @@ function Home() {
                     Track your bus in real-time and stay updated.
                 </p>
 
-                {/* 🚀 Premium Arrival Card */}
                 <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-white/30 relative">
 
-                    {/* LIVE Indicator */}
                     <div className="flex items-center gap-2 mb-2 relative">
                         <div className="relative">
                             <span className="absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75 animate-ping"></span>
@@ -104,17 +98,36 @@ function Home() {
                         {trackingData.distance} km away
                     </p>
 
-                    {/* 🔥 Quick Stats Chips */}
-                    <div className="flex gap-3 mt-3 flex-wrap">
-                        <div className="bg-black/20 px-3 py-1 rounded-full text-sm font-medium">
-                            🚌 Bus 62
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+
+                        <div className="bg-white rounded-xl p-4 shadow">
+                            <p className="text-gray-500 text-sm">Bus ID</p>
+                            <p className="text-lg font-bold">
+                                {user.busId || "Not Assigned"}
+                            </p>
                         </div>
-                        <div className="bg-black/20 px-3 py-1 rounded-full text-sm font-medium">
-                            📍 Sector 48
+
+                        <div className="bg-white rounded-xl p-4 shadow">
+                            <p className="text-gray-500 text-sm">Student Name</p>
+                            <p className="text-lg font-bold">
+                                {user.fullName || "Unknown"}
+                            </p>
                         </div>
-                        <div className="bg-black/20 px-3 py-1 rounded-full text-sm font-medium">
-                            ⏱ On Time
+
+                        <div className="bg-white rounded-xl p-4 shadow">
+                            <p className="text-gray-500 text-sm">Course</p>
+                            <p className="text-lg font-bold">
+                                {user.course || "-"}
+                            </p>
                         </div>
+
+                        <div className="bg-white rounded-xl p-4 shadow">
+                            <p className="text-gray-500 text-sm">Branch + Sem</p>
+                            <p className="text-lg font-bold">
+                                {user.branchSem || "-"}
+                            </p>
+                        </div>
+
                     </div>
 
                     <div
@@ -125,7 +138,6 @@ function Home() {
                     </div>
                 </div>
 
-                {/* 🔥 SOS Glow Effect */}
                 <div className="absolute right-6 top-56">
                     <div className="absolute inset-0 bg-red-600 rounded-full blur-2xl opacity-50"></div>
                     <button
@@ -138,12 +150,9 @@ function Home() {
 
             </div>
 
-            {/* BLACK BODY SECTION */}
             <div className="bg-black rounded-t-3xl px-6 py-8 min-h-[60vh]">
 
-                {/* MORNING ROUTE */}
                 <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-6 mb-6 text-center shadow-xl hover:scale-[1.03] transition">
-
                     <button
                         onClick={() => navigate("/live-tracking?type=morning")}
                         className="text-2xl font-bold text-white mb-4 w-full"
@@ -157,12 +166,9 @@ function Home() {
                     >
                         Mark your attendance
                     </button>
-
                 </div>
 
-                {/* EVENING ROUTE */}
                 <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-6 mb-6 text-center shadow-xl hover:scale-[1.03] transition">
-
                     <button
                         onClick={() => navigate("/live-tracking?type=evening")}
                         className="text-2xl font-bold text-white mb-4 w-full"
@@ -176,10 +182,8 @@ function Home() {
                     >
                         Mark your attendance
                     </button>
-
                 </div>
 
-                {/* Bottom Action Buttons */}
                 <button
                     onClick={() => navigate("/fee-status")}
                     className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 rounded-xl font-bold mb-4 shadow-md hover:scale-105 transition">

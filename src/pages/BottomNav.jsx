@@ -14,7 +14,10 @@ function BottomNav() {
 
             <Info className="cursor-pointer" />
 
-            <Phone className="cursor-pointer" />
+            <Phone
+                className="cursor-pointer" 
+                onClick={() => navigate("/contact")}
+            />
 
             <User
                 className="cursor-pointer"

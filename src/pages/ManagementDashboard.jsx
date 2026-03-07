@@ -13,7 +13,7 @@ function ManagementDashboard() {
         window.innerWidth > window.innerHeight
     )
 
-    // Orientation Detection
+    // detect the orientation
     useEffect(() => {
         const handleResize = () => {
             setIsLandscape(window.innerWidth > window.innerHeight)
@@ -23,7 +23,7 @@ function ManagementDashboard() {
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
-    // Load Data
+    // data loading
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem("currentUser"))
         const users = JSON.parse(localStorage.getItem("users")) || []
@@ -64,7 +64,7 @@ function ManagementDashboard() {
         return "ON TIME"
     }
 
-    // 🔄 Show rotate screen if portrait
+    //  mobile ke liye show rotate please
     if (!isLandscape) {
         return (
             <div className="h-screen flex items-center justify-center bg-black text-white text-center p-6">
@@ -126,7 +126,7 @@ function ManagementDashboard() {
 
             </div>
 
-            {/* Main Content */}
+            {/* Main section */}
             <div className="flex-1 p-6">
 
                 <div className="flex justify-between items-center mb-6">
@@ -147,7 +147,7 @@ function ManagementDashboard() {
                     </p>
                 </div>
 
-                {/* Bus Table */}
+                {/* Bus ki info */}
                 <div className="bg-gray-800 rounded-2xl overflow-hidden">
 
                     <div className="grid grid-cols-5 bg-black p-3 font-semibold text-sm">

@@ -14,7 +14,7 @@ function LiveTracking() {
     const [distance, setDistance] = useState(5)
     const [arrivalTime, setArrivalTime] = useState(25)
 
-    // Dynamic Route Data
+    // Route Data
     const routeTitle = routeType === "evening" ? "Evening Route" : "Morning Route"
     const busNumber = routeType === "evening" ? "Bus 84" : "Bus 62"
     const currentLocation = routeType === "evening" ? "Sector 32" : "Sector 48"

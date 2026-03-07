@@ -22,7 +22,7 @@ function ForgotPassword() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
 
-      {/* Same Slanted Yellow Background */}
+      {/* Background */}
       <div
         className="absolute inset-0 bg-yellow-400"
         style={{
@@ -78,7 +78,7 @@ function ForgotPassword() {
             </p>
           )}
 
-          {/* Create New Password Button (Now at Bottom) */}
+          {/* Create New Password Button */}
           <button
             onClick={handleCreatePassword}
             className="w-full bg-cyan-500 text-white py-3 rounded-lg font-semibold"

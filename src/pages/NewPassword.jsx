@@ -23,7 +23,7 @@ function NewPassword() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
 
-      {/* Same Slanted Yellow Background */}
+      {/* bg */}
       <div
         className="absolute inset-0 bg-yellow-400"
         style={{

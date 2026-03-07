@@ -22,7 +22,7 @@ function DriverDashboard() {
         setDriver(currentUser)
         setAttendance(allAttendance)
 
-        // Only students of same bus number
+        // sirf us hi bus ke students count kare 
         const busStudents = allUsers.filter(
             (user) =>
                 user.role === "student" &&
@@ -49,7 +49,7 @@ function DriverDashboard() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-400 p-4">
 
-            {/* Header */}
+            {/* top bar */}
             <div className="bg-yellow-400 rounded-2xl p-4 shadow-xl mb-6 flex justify-between items-center">
 
                 <div>

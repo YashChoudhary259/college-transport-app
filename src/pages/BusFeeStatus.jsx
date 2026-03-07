@@ -8,19 +8,25 @@ function BusFeeStatus() {
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-        const isLoggedIn = localStorage.getItem("isLoggedIn")
+
         const storedUser = JSON.parse(localStorage.getItem("user"))
 
-        if (!isLoggedIn || !storedUser) {
+        if (!storedUser) {
             navigate("/")
         } else {
             setUser(storedUser)
         }
-    }, [])
 
-    if (!user) return null
+    }, [navigate])
 
-    // Example Fee Logic (You can later connect to backend)
+    if (!user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-yellow-400 to-black text-white">
+                Loading...
+            </div>
+        )
+    }
+
     const totalFee = 100000
     const paidAmount = 60000
     const fine = 10000
@@ -40,7 +46,7 @@ function BusFeeStatus() {
             <div className="bg-gray-700 text-white rounded-xl overflow-hidden shadow-lg">
 
                 {[
-                    ["BUS ID", user.id],
+                    ["BUS ID", user.busId],
                     ["NAME", user.fullName],
                     ["COURSE", user.course],
                     ["BRANCH + SEM", user.branchSem],
@@ -55,7 +61,7 @@ function BusFeeStatus() {
                         className="flex justify-between border-b border-gray-500 px-4 py-3"
                     >
                         <span className="font-semibold">{label}</span>
-                        <span>{value}</span>
+                        <span>{value || "-"}</span>
                     </div>
                 ))}
 
@@ -63,7 +69,7 @@ function BusFeeStatus() {
 
             <button
                 className="w-full bg-cyan-400 text-black py-3 rounded-xl font-bold mt-6 active:scale-95 transition"
-                onClick={() => alert("Receipt Downloaded ✅ (Demo)")}
+                onClick={() => alert("Receipt Downloaded ✅")}
             >
                 DOWNLOAD RECEIPT
             </button>

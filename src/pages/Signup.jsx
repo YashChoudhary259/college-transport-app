@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-/* ================= REUSABLE INPUT COMPONENT ================= */
+
 const Input = ({ type = "text", placeholder, value, setValue }) => (
     <input
         type={type}
@@ -17,26 +17,23 @@ function Signup() {
     const navigate = useNavigate()
     const [role, setRole] = useState("student")
 
-    // Common
     const [fullName, setFullName] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
 
-    // ================= STUDENT =================
+    const [studentBusId, setStudentBusId] = useState("")
     const [course, setCourse] = useState("")
     const [branchSem, setBranchSem] = useState("")
     const [studentContact, setStudentContact] = useState("")
     const [studentEmail, setStudentEmail] = useState("")
     const [studentAddress, setStudentAddress] = useState("")
 
-    // ================= DRIVER =================
     const [busId, setBusId] = useState("")
     const [driverId, setDriverId] = useState("")
     const [busNumber, setBusNumber] = useState("")
     const [driverContact, setDriverContact] = useState("")
     const [driverAddress, setDriverAddress] = useState("")
 
-    // ================= MANAGEMENT =================
     const [managementId, setManagementId] = useState("")
     const [managementEmail, setManagementEmail] = useState("")
     const [managementAddress, setManagementAddress] = useState("")
@@ -51,7 +48,7 @@ function Signup() {
         }
 
         if (role === "student") {
-            if (!course || !branchSem || !studentContact || !studentEmail || !studentAddress) {
+            if (!studentBusId || !course || !branchSem || !studentContact || !studentEmail || !studentAddress) {
                 setError("All student fields are required")
                 return
             }
@@ -78,49 +75,62 @@ function Signup() {
             fullName,
             password,
 
-            // Student
+            busId: role === "student" ? studentBusId : busId,
+
             course: role === "student" ? course : null,
             branchSem: role === "student" ? branchSem : null,
-            studentContact: role === "student" ? studentContact : null,
-            studentEmail: role === "student" ? studentEmail : null,
-            studentAddress: role === "student" ? studentAddress : null,
 
-            // Driver
-            busId: role === "driver" ? busId : null,
+            contact:
+                role === "student"
+                    ? studentContact
+                    : role === "driver"
+                    ? driverContact
+                    : null,
+
+            email:
+                role === "student"
+                    ? studentEmail
+                    : role === "management"
+                    ? managementEmail
+                    : null,
+
+            address:
+                role === "student"
+                    ? studentAddress
+                    : role === "driver"
+                    ? driverAddress
+                    : role === "management"
+                    ? managementAddress
+                    : null,
+
             driverId: role === "driver" ? driverId : null,
             busNumber: role === "driver" ? busNumber : null,
-            driverContact: role === "driver" ? driverContact : null,
-            driverAddress: role === "driver" ? driverAddress : null,
 
-            // Management
-            managementId: role === "management" ? managementId : null,
-            managementEmail: role === "management" ? managementEmail : null,
-            managementAddress: role === "management" ? managementAddress : null
+            managementId: role === "management" ? managementId : null
         }
 
         users.push(newUser)
         localStorage.setItem("users", JSON.stringify(users))
 
-        alert("Account Created Successfully ✅")
+        alert("Account Created Successfully")
         navigate("/")
     }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-yellow-500 flex items-center justify-center px-4 py-10">
 
-            <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8 transition-all duration-300">
+            <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8">
 
                 <h1 className="text-3xl font-bold text-center mb-6 text-black">
                     Create Account
                 </h1>
 
-                {/* Role Selector */}
                 <div className="flex mb-8 bg-gray-100 rounded-full p-1">
                     {["student", "driver", "management"].map((r) => (
                         <button
                             key={r}
                             onClick={() => setRole(r)}
-                            className={`flex-1 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                            className={`flex-1 py-2 rounded-full text-sm font-semibold transition ${
                                 role === r
                                     ? "bg-yellow-400 text-black shadow-md"
                                     : "text-gray-600"
@@ -133,10 +143,10 @@ function Signup() {
 
                 <div className="space-y-4">
 
-                    {/* STUDENT */}
                     {role === "student" && (
                         <>
                             <Input placeholder="Full Name" value={fullName} setValue={setFullName} />
+                            <Input placeholder="Bus ID" value={studentBusId} setValue={setStudentBusId} />
                             <Input placeholder="Course" value={course} setValue={setCourse} />
                             <Input placeholder="Branch + Semester" value={branchSem} setValue={setBranchSem} />
                             <Input placeholder="Contact Number" value={studentContact} setValue={setStudentContact} />
@@ -146,7 +156,6 @@ function Signup() {
                         </>
                     )}
 
-                    {/* DRIVER */}
                     {role === "driver" && (
                         <>
                             <Input placeholder="Full Name" value={fullName} setValue={setFullName} />
@@ -159,7 +168,6 @@ function Signup() {
                         </>
                     )}
 
-                    {/* MANAGEMENT */}
                     {role === "management" && (
                         <>
                             <Input placeholder="Management ID" value={managementId} setValue={setManagementId} />
@@ -178,7 +186,7 @@ function Signup() {
 
                     <button
                         onClick={handleSignup}
-                        className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-3 rounded-xl font-semibold transition-all duration-300"
+                        className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-3 rounded-xl font-semibold transition"
                     >
                         Sign Up
                     </button>
@@ -190,3 +198,4 @@ function Signup() {
 }
 
 export default Signup
+

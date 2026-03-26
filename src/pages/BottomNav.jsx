@@ -12,10 +12,13 @@ function BottomNav() {
                 onClick={() => navigate("/home")}
             />
 
-            <Info className="cursor-pointer" />
+            <Info
+                className="cursor-pointer"
+                onClick={() => navigate("/info")}
+             />
 
             <Phone
-                className="cursor-pointer" 
+                className="cursor-pointer"
                 onClick={() => navigate("/contact")}
             />
 

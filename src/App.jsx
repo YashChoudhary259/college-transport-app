@@ -29,6 +29,7 @@ import LicenceReports from "./pages/LicenseReports"
 import LicenceReportDetails from "./pages/LicenseReportDetails"
 import AccidentReports from "./pages/AccidentReports"
 import AccidentReportDetails from "./pages/AccidentReportDetails"
+import EditSOS from "./pages/EditSOS"
 
 
 import Home from "./pages/Home"
@@ -76,6 +77,7 @@ function App() {
       <Route path="/licence-report/:id" element={<LicenceReportDetails />} />
       <Route path="/accident-reports" element={<AccidentReports />} />
       <Route path="/accident-report/:id" element={<AccidentReportDetails />} />
+      <Route path="/edit-sos" element={<EditSOS />} />
 
 
 

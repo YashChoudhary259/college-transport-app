@@ -112,8 +112,17 @@ function StudentLogin() {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full border border-black rounded-lg px-4 py-3 mb-2 outline-none"
+                        className="w-full border border-black rounded-lg px-4 py-3 mb-1 outline-none"
                     />
+
+                    <div className="text-right mb-3">
+                        <button
+                            onClick={() => navigate("/forgot-password")}
+                            className="text-cyan-500 text-sm hover:underline"
+                        >
+                            Forgot Password?
+                        </button>
+                    </div>
 
                     {error && (
                         <p className="text-red-500 text-sm mb-3 text-center">

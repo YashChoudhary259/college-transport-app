@@ -5,25 +5,36 @@ function BottomNav() {
     const navigate = useNavigate()
 
     return (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-full px-10 py-3 flex gap-10 shadow-lg z-50">
+        <div className="
+            fixed bottom-4 left-1/2 -translate-x-1/2
+            bg-white/90 backdrop-blur-md
+            rounded-full px-8 py-3
+            flex gap-8
+            shadow-2xl
+            z-50
+        ">
 
             <HomeIcon
-                className="cursor-pointer"
+                size={26}
+                className="cursor-pointer hover:scale-110 transition"
                 onClick={() => navigate("/home")}
             />
 
             <Info
-                className="cursor-pointer"
+                size={26}
+                className="cursor-pointer hover:scale-110 transition"
                 onClick={() => navigate("/info")}
-             />
+            />
 
             <Phone
-                className="cursor-pointer"
+                size={26}
+                className="cursor-pointer hover:scale-110 transition"
                 onClick={() => navigate("/contact")}
             />
 
             <User
-                className="cursor-pointer"
+                size={26}
+                className="cursor-pointer hover:scale-110 transition"
                 onClick={() => navigate("/account")}
             />
         </div>

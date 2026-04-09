@@ -8,6 +8,8 @@ function DriverDashboard() {
     const [students, setStudents] = useState([])
     const [attendance, setAttendance] = useState([])
     const [tripStarted, setTripStarted] = useState(false)
+    const [distance, setDistance] = useState(0)
+    const [startTime, setStartTime] = useState(null)
 
     useEffect(() => {
 
@@ -23,7 +25,6 @@ function DriverDashboard() {
         setDriver(currentUser)
         setAttendance(allAttendance)
 
-        
         const busStudents = allUsers.filter(
             (user) =>
                 user.role === "student" &&
@@ -32,15 +33,50 @@ function DriverDashboard() {
 
         setStudents(busStudents)
 
+        const savedTrip = JSON.parse(localStorage.getItem("tripTracking"))
+
+        if (savedTrip) {
+            setDistance(savedTrip.distance || 0)
+            setStartTime(savedTrip.startTime || null)
+            setTripStarted(savedTrip.started || false)
+        }
+
     }, [navigate])
 
+    useEffect(() => {
+
+        if (!tripStarted || !startTime) return
+
+        const interval = setInterval(() => {
+
+            const now = Date.now()
+            const hours = (now - startTime) / (1000 * 60 * 60)
+
+            const speed = 30
+            const newDistance = (hours * speed).toFixed(2)
+
+            setDistance(newDistance)
+
+            localStorage.setItem(
+                "tripTracking",
+                JSON.stringify({
+                    started: true,
+                    startTime,
+                    distance: newDistance
+                })
+            )
+
+        }, 5000)
+
+        return () => clearInterval(interval)
+
+    }, [tripStarted, startTime])
 
     const logout = () => {
         localStorage.removeItem("user")
         localStorage.removeItem("isLoggedIn")
         navigate("/")
     }
-
 
     const getAttendanceStatus = (studentEmail) => {
 
@@ -51,27 +87,34 @@ function DriverDashboard() {
         return record?.status === "present"
     }
 
-
     const toggleTrip = () => {
 
         const newStatus = !tripStarted
         setTripStarted(newStatus)
 
-        
-        localStorage.setItem(
-            "tripStatus",
-            JSON.stringify({
-                busNumber: driver?.busNumber,
-                started: newStatus
-            })
-        )
-    }
+        if (newStatus) {
+            const start = Date.now()
+            setStartTime(start)
+            setDistance(0)
 
+            localStorage.setItem(
+                "tripTracking",
+                JSON.stringify({
+                    started: true,
+                    startTime: start,
+                    distance: 0
+                })
+            )
+        } else {
+            localStorage.removeItem("tripTracking")
+            setDistance(0)
+            setStartTime(null)
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-400 p-4">
 
-            {/* Top bar */}
             <div className="bg-yellow-400 rounded-2xl p-4 shadow-xl mb-6 flex justify-between items-center">
 
                 <div>
@@ -81,6 +124,10 @@ function DriverDashboard() {
 
                     <p className="text-sm">
                         Good Morning, {driver?.fullName}
+                    </p>
+
+                    <p className="text-sm font-semibold mt-1">
+                        🛣️ {distance} km travelled
                     </p>
                 </div>
 
@@ -93,8 +140,6 @@ function DriverDashboard() {
 
             </div>
 
-
-            {/* Emergency Button */}
             <div className="bg-white rounded-2xl p-4 shadow-lg mb-6">
 
                 <button
@@ -106,8 +151,6 @@ function DriverDashboard() {
 
             </div>
 
-
-            {/* Students List */}
             <div className="space-y-4">
 
                 {students.map((student) => {
@@ -151,7 +194,6 @@ function DriverDashboard() {
 
                 })}
 
-
                 {students.length === 0 && (
                     <p className="text-white text-center mt-10">
                         No students assigned to this bus.
@@ -160,8 +202,6 @@ function DriverDashboard() {
 
             </div>
 
-
-            {/* Start Trip Button */}
             <div className="fixed bottom-0 left-0 right-0 bg-yellow-400 p-4 rounded-t-3xl shadow-xl">
 
                 <button

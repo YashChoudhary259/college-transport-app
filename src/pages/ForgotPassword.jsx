@@ -22,7 +22,7 @@ function ForgotPassword() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
 
-      {/* Background */}
+      
       <div
         className="absolute inset-0 bg-yellow-400"
         style={{
@@ -32,7 +32,7 @@ function ForgotPassword() {
 
       <div className="relative z-10 px-6 py-10 flex flex-col min-h-screen">
 
-        {/* WCTM Logo */}
+        
         <div className="flex justify-center mb-12">
           <img
             src="/wctm-logo.png"
@@ -41,7 +41,7 @@ function ForgotPassword() {
           />
         </div>
 
-        {/* Card */}
+        
         <div className="bg-white border border-black rounded-2xl p-6 shadow-md max-w-md w-full mx-auto">
 
           <input
@@ -78,7 +78,7 @@ function ForgotPassword() {
             </p>
           )}
 
-          {/* Create New Password Button */}
+          
           <button
             onClick={handleCreatePassword}
             className="w-full bg-cyan-500 text-white py-3 rounded-lg font-semibold"

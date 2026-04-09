@@ -1,49 +1,59 @@
 import { useState, useEffect } from "react"
 import { Phone, AlertTriangle } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import BottomNav from "./BottomNav"
 
 function SOS() {
 
-  const [contactName, setContactName] = useState("")
-  const [phoneNumber, setPhoneNumber] = useState("")
+  const navigate = useNavigate()
 
-  // Load saved contact
+  const [contacts, setContacts] = useState([])
+  const [timer, setTimer] = useState(15)
+  const [active, setActive] = useState(false)
+
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("sos_contact"))
-    if (saved) {
-      setContactName(saved.name)
-      setPhoneNumber(saved.phone)
-    }
+    const saved = JSON.parse(localStorage.getItem("sos_contacts")) || []
+    setContacts(saved)
   }, [])
 
-  // Save contact
-  const handleSave = () => {
-    if (!contactName || !phoneNumber) {
-      alert("Please enter contact name and number.")
+  useEffect(() => {
+    if (!active) return
+
+    if (timer === 0) {
+      handleEmergencyCall()
       return
     }
 
-    localStorage.setItem(
-      "sos_contact",
-      JSON.stringify({ name: contactName, phone: phoneNumber })
-    )
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1)
+    }, 1000)
 
-    alert("Emergency contact saved ✅")
+    return () => clearInterval(interval)
+  }, [active, timer])
+
+  const startSOS = () => {
+    setActive(true)
+    setTimer(15)
   }
 
-  const handleDial = () => {
-    if (!phoneNumber) {
-      alert("No phone number found.")
+  const handleSafe = () => {
+    setActive(false)
+    setTimer(15)
+  }
+
+  const handleEmergencyCall = () => {
+    if (contacts.length === 0) {
+      alert("No emergency contacts saved")
       return
     }
 
-    window.location.href = `tel:${phoneNumber}`
+    const firstContact = contacts[0]
+    window.location.href = `tel:${firstContact.phone}`
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-500 to-black p-6 pb-24 text-white">
 
-      {/* SOS ICON */}
       <div className="flex flex-col items-center mt-6">
         <div className="bg-white p-6 rounded-full shadow-2xl">
           <AlertTriangle size={60} className="text-red-600" />
@@ -54,44 +64,55 @@ function SOS() {
         </h1>
       </div>
 
-      {/* CONTACT SECTION */}
-      <div className="mt-10 bg-white text-black rounded-3xl p-6 shadow-xl space-y-4">
+      {!active ? (
+        <div className="mt-10 text-center">
+          <button
+            onClick={startSOS}
+            className="bg-red-600 px-10 py-4 rounded-full text-lg font-bold shadow-xl animate-pulse"
+          >
+            ACTIVATE SOS
+          </button>
+        </div>
+      ) : (
+        <div className="mt-10 bg-white text-black rounded-3xl p-6 shadow-xl text-center space-y-6">
 
-        <h2 className="text-lg font-bold text-center">
-          Priority Contact Information
-        </h2>
+          <h2 className="text-xl font-bold">
+            Emergency Triggered
+          </h2>
 
-        <input
-          type="text"
-          placeholder="Contact Name"
-          value={contactName}
-          onChange={(e) => setContactName(e.target.value)}
-          className="w-full p-3 rounded-xl border"
-        />
+          <p className="text-lg font-semibold text-red-600">
+            Calling in {timer} seconds...
+          </p>
 
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          className="w-full p-3 rounded-xl border"
-        />
+          <div className="flex flex-col gap-4">
 
+            <button
+              onClick={handleSafe}
+              className="bg-green-500 text-white py-3 rounded-xl font-bold"
+            >
+              I am Safe
+            </button>
+
+            <button
+              onClick={handleEmergencyCall}
+              className="bg-red-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2"
+            >
+              <Phone size={18} />
+              I am in Danger
+            </button>
+
+          </div>
+
+        </div>
+      )}
+
+      <div className="mt-6 text-center">
         <button
-          onClick={handleSave}
-          className="w-full bg-black text-white py-3 rounded-xl font-semibold"
+          onClick={() => navigate("/edit-sos")}
+          className="underline text-sm text-white/80"
         >
-          Save Contact
+          Edit Emergency Contacts
         </button>
-
-        <button
-          onClick={handleDial}
-          className="w-full bg-red-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2"
-        >
-          <Phone size={18} />
-          Dial Priority Number
-        </button>
-
       </div>
 
       <BottomNav />
